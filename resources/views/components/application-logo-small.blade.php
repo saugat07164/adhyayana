@@ -1,0 +1,1 @@
+<img src="{{ asset('build/assets/images/small-logo-small.jpeg') }}" alt="{{ config('app.name', 'Laravel') }}" {{ $attributes }}> 

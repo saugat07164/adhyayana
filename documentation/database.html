@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LMS Database Design Documentation</title>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; }
+    h1, h2, h3 { color: #333; }
+    pre { background: #f4f4f4; padding: 10px; border-left: 5px solid #ccc; overflow-x: auto; }
+    code { background: #eee; padding: 2px 4px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <h1>LMS Database Schema Documentation</h1>
+
+  <h2>Key Features</h2>
+  <ul>
+    <li>Role-based course creation and management</li>
+    <li>Courses structured into units and chapters</li>
+    <li>Tracking enrollments and chapter progress</li>
+    <li>Cart, coupon, and payment system</li>
+    <li>Badges and certificates for learners</li>
+    <li>Admin notifications for course activity</li>
+  </ul>
+
+  <h2>Migration Order (Laravel)</h2>
+  <ul>
+    <li>php artisan make:migration create_roles_table</li>
+    <li>php artisan make:migration create_users_table</li>
+    <li>php artisan make:migration create_categories_table</li>
+    <li>php artisan make:migration create_tags_table</li>
+    <li>php artisan make:migration create_courses_table</li>
+    <li>php artisan make:migration create_course_tag_table</li>
+    <li>php artisan make:migration create_units_table</li>
+    <li>php artisan make:migration create_chapters_table</li>
+    <li>php artisan make:migration create_carts_table</li>
+    <li>php artisan make:migration create_cart_items_table</li>
+    <li>php artisan make:migration create_coupons_table</li>
+    <li>php artisan make:migration create_coupon_usages_table</li>
+    <li>php artisan make:migration create_payments_table</li>
+    <li>php artisan make:migration create_course_accesses_table</li>
+    <li>php artisan make:migration create_enrollments_table</li>
+    <li>php artisan make:migration create_chapter_progress_table</li>
+    <li>php artisan make:migration create_certificates_table</li>
+    <li>php artisan make:migration create_notifications_table</li>
+    <li>php artisan make:migration create_badges_table</li>
+    <li>php artisan make:migration create_user_badges_table</li>
+    <li>php artisan make:migration create_admin_logs_table</li>
+  </ul>
+
+  <h2>ERD for dbdiagram.io</h2>
+  <pre><code>Table roles {
+  id int [pk, increment]
+  name varchar
+}
+
+Table users {
+  id int [pk, increment]
+  name varchar
+  email varchar [unique]
+  password varchar
+  profile_photo_path varchar
+  role_id int [ref: > roles.id]
+}
+
+Table categories {
+  id int [pk, increment]
+  name varchar
+  slug varchar [unique]
+}
+
+Table tags {
+  id int [pk, increment]
+  name varchar
+  slug varchar [unique]
+}
+
+Table courses {
+  id int [pk, increment]
+  title varchar
+  slug varchar [unique]
+  description text
+  thumbnail_path varchar
+  price decimal
+  is_free boolean
+  category_id int [ref: > categories.id]
+  instructor_id int [ref: > users.id]
+  created_by int [ref: > users.id]
+  approved_by int [ref: > users.id]
+  status varchar
+}
+
+Table course_tag {
+  course_id int [ref: > courses.id]
+  tag_id int [ref: > tags.id]
+  primary key (course_id, tag_id)
+}
+
+Table units {
+  id int [pk, increment]
+  course_id int [ref: > courses.id]
+  title varchar
+  position int
+}
+
+Table chapters {
+  id int [pk, increment]
+  unit_id int [ref: > units.id]
+  title varchar
+  video_url varchar
+  content text
+  position int
+  duration_in_minutes int
+}
+
+Table carts {
+  id int [pk, increment]
+  user_id int [ref: > users.id]
+}
+
+Table cart_items {
+  id int [pk, increment]
+  cart_id int [ref: > carts.id]
+  course_id int [ref: > courses.id]
+}
+
+Table coupons {
+  id int [pk, increment]
+  code varchar [unique]
+  discount_type varchar
+  discount_amount decimal
+  max_uses int
+  used_count int
+  valid_from datetime
+  valid_until datetime
+}
+
+Table coupon_usages {
+  id int [pk, increment]
+  coupon_id int [ref: > coupons.id]
+  user_id int [ref: > users.id]
+  course_id int [ref: > courses.id]
+}
+
+Table payments {
+  id int [pk, increment]
+  user_id int [ref: > users.id]
+  payment_gateway varchar
+  payment_reference varchar
+  amount decimal
+  status varchar
+  paid_at datetime
+}
+
+Table course_accesses {
+  id int [pk, increment]
+  user_id int [ref: > users.id]
+  course_id int [ref: > courses.id]
+  access_type varchar
+  coupon_id int [ref: > coupons.id]
+  payment_id int [ref: > payments.id]
+  purchased_at datetime
+  expires_at datetime
+}
+
+Table enrollments {
+  id int [pk, increment]
+  user_id int [ref: > users.id]
+  course_id int [ref: > courses.id]
+  status varchar
+  enrolled_at datetime
+  completed_at datetime
+}
+
+Table chapter_progress {
+  id int [pk, increment]
+  enrollment_id int [ref: > enrollments.id]
+  chapter_id int [ref: > chapters.id]
+  watched boolean
+  watched_at datetime
+}
+
+Table certificates {
+  id int [pk, increment]
+  user_id int [ref: > users.id]
+  course_id int [ref: > courses.id]
+  certificate_number varchar [unique]
+  certificate_url varchar
+  issued_at datetime
+}
+
+Table notifications {
+  id int [pk, increment]
+  type varchar
+  user_id int [ref: > users.id]
+  course_id int [ref: > courses.id]
+  admin_seen boolean
+  message text
+}
+
+Table badges {
+  id int [pk, increment]
+  title varchar
+  description varchar
+  icon_url varchar
+  criteria_type varchar
+  criteria_value int
+}
+
+Table user_badges {
+  id int [pk, increment]
+  user_id int [ref: > users.id]
+  badge_id int [ref: > badges.id]
+  earned_at datetime
+}
+
+Table admin_logs {
+  id int [pk, increment]
+  admin_id int [ref: > users.id]
+  action_type varchar
+  action_details text
+}
+</code></pre>
+
+  <p><strong>Note:</strong> Use Laravel factories and seeders to populate roles and basic data. You can implement event-driven architecture for notifications, badge logic, and certificate generation.</p>
+</body>
+</html>
