@@ -1,16 +1,30 @@
 <?php
-
+use Livewire\Livewire;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\UserCrud;
 use App\Livewire\RoleCrud;
+use App\Livewire\AdminDashboard;
 Route::view('/', 'welcome');
 
 // Routes that require authentication and verification
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::view('/dashboard', 'dashboard.default')->name('dashboard');
+    Route::get('/dashboard', function () {
+    $role = auth()->user()->getRoleNames()->first(); // or custom logic
+    return match ($role) {
+        'admin' => redirect()->route('dashboard.admin'),
+        'staff' => redirect()->route('dashboard.staff'),
+        'instructor' => redirect()->route('dashboard.instructor'),
+        'student' => redirect()->route('dashboard.student'),
+        'support' => redirect()->route('dashboard.support'),
+        'visitor' => redirect()->route('dashboard.visitor'),
+        default => view('dashboard.default')
+    };
+});
 
+Route::get('/dashboard/admin', AdminDashboard::class)
+        ->middleware('role:admin')
+        ->name('dashboard.admin');
     // Dashboard routes that also require specific roles
-    Route::view('/dashboard/admin', 'dashboard.admin')->middleware('role:admin')->name('dashboard.admin');
     Route::view('/dashboard/staff', 'dashboard.staff')->middleware('role:staff')->name('dashboard.staff');
     Route::view('/dashboard/instructor', 'dashboard.instructor')->middleware('role:instructor')->name('dashboard.instructor');
     Route::view('/dashboard/student', 'dashboard.student')->middleware('role:student')->name('dashboard.student');
