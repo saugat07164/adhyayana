@@ -126,8 +126,8 @@
                                         </svg>
                                     </button>
                                     <ul x-show="open" class="ml-6 space-y-1">
-                                        <li><a href="/livewire/chapter-crud" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">Chapters</a></li>
-                                        <li><a href="/livewire/unit-crud" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">Units</a></li>
+                                        <li> <a href="{{ route('chapter-crud') }}" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">Chapters</a></li>
+                                        <li><a href="{{ route('unit-crud') }}" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">Units</a></li>
                                     </ul>
                                 </li>
                                 @endif

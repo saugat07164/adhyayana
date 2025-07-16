@@ -4,7 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Livewire\UserCrud;
 use App\Livewire\RoleCrud;
 use App\Livewire\AdminDashboard;
-
+use App\Livewire\ChapterCrud;
+use App\Livewire\UnitCrud;
 Route::view('/', 'welcome');
 
 // Routes that require authentication and verification
@@ -61,6 +62,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/courses/{course}', function ($course) {
         return view('courses.show');
     })->name('courses.show');
+
+
+Route::get('/chapters', ChapterCrud::class)->name('chapter-crud');
+Route::get('/units', UnitCrud::class)->name('unit-crud');
 
     // User Profile Page
     Route::view('/profile', 'profile')->name('profile');
