@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use App\Models\Category;
 
 class CategoryCrud extends Component
@@ -31,7 +32,14 @@ class CategoryCrud extends Component
         $this->validate([
             'name' => 'required|string|max:255',
         ]);
-        Category::create(['name' => $this->name]);
+
+        $slug = $this->generateUniqueSlug($this->name);
+
+        Category::create([
+            'name' => $this->name,
+            'slug' => $slug,
+        ]);
+
         $this->resetForm();
         $this->fetch();
         session()->flash('message', 'Category created successfully!');
@@ -50,8 +58,16 @@ class CategoryCrud extends Component
         $this->validate([
             'name' => 'required|string|max:255',
         ]);
+
         $category = Category::findOrFail($this->categoryId);
-        $category->update(['name' => $this->name]);
+
+        $slug = $this->generateUniqueSlug($this->name, $this->categoryId);
+
+        $category->update([
+            'name' => $this->name,
+            'slug' => $slug,
+        ]);
+
         $this->resetForm();
         $this->fetch();
         session()->flash('message', 'Category updated successfully!');
@@ -74,6 +90,32 @@ class CategoryCrud extends Component
         $this->categoryId = null;
         $this->name = '';
         $this->editMode = false;
+    }
+
+    /**
+     * Generate a unique slug for the given name.
+     * Checks against DB to avoid duplicates.
+     *
+     * @param string $name
+     * @param int|null $ignoreId - category ID to exclude from uniqueness check (for updates)
+     * @return string
+     */
+    protected function generateUniqueSlug(string $name, ?int $ignoreId = null): string
+    {
+        $slug = Str::slug($name);
+        $originalSlug = $slug;
+        $count = 1;
+
+        // Check slug uniqueness, ignore current ID if updating
+        while (
+            Category::where('slug', $slug)
+                ->when($ignoreId, fn($query) => $query->where('id', '!=', $ignoreId))
+                ->exists()
+        ) {
+            $slug = $originalSlug . '-' . $count++;
+        }
+
+        return $slug;
     }
 
     public function render()

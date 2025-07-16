@@ -102,8 +102,8 @@
                                         </svg>
                                     </button>
                                     <ul x-show="open" class="ml-6 space-y-1">
-                                        <li><a href="/courses" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">Browse Courses</a></li>
-                                        <li><a href="/livewire/category-crud" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">Categories</a></li>
+                                        <li><a href="{{ route('courses.index') }}" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">Browse Courses</a></li>
+                                        <li><a href="{{ route('courses.categories') }}" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">Categories</a></li>
                                         @if($user->hasRole('instructor'))<li><a href="/livewire/course-crud?my=1" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">My Courses</a></li>@endif
                                         @if($user->hasRole('admin') || $user->hasRole('staff'))
                                         <li><a href="/livewire/certificate-crud" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">Certificates</a></li>

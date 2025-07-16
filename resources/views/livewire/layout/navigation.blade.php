@@ -25,23 +25,25 @@ new class extends Component
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     @php
-                        $user = auth()->user();
-                        $dashboardRoute = 'dashboard';
+    $user = auth()->user();
+    $dashboardRoute = 'dashboard'; // fallback
 
-                        if ($user) {
-                            if ($user->hasRole('admin')) {
-                                $dashboardRoute = 'dashboard.admin';
-                            } elseif ($user->hasRole('instructor')) {
-                                $dashboardRoute = 'dashboard.instructor';
-                            } elseif ($user->hasRole('student')) {
-                                $dashboardRoute = 'dashboard.student';
-                            } elseif ($user->hasRole('staff')) {
-                                $dashboardRoute = 'dashboard.staff';
-                            } elseif ($user->hasRole('support')) {
-                                $dashboardRoute = 'dashboard.support';
-                            }
-                        }
-                    @endphp
+    if ($user) {
+        if ($user->hasRole('admin')) {
+            $dashboardRoute = 'dashboard.admin';
+        } elseif ($user->hasRole('instructor')) {
+            $dashboardRoute = 'dashboard.instructor';
+        } elseif ($user->hasRole('student')) {
+            $dashboardRoute = 'dashboard.student';
+        } elseif ($user->hasRole('staff')) {
+            $dashboardRoute = 'dashboard.staff';
+        } elseif ($user->hasRole('support')) {
+            $dashboardRoute = 'dashboard.support';
+        } elseif ($user->hasRole('visitor')) {
+            $dashboardRoute = 'dashboard.visitor';
+        }
+    }
+@endphp
 
                     <a href="{{ route($dashboardRoute) }}" wire:navigate>
                         <x-application-logo class="block h-9 w-auto" />

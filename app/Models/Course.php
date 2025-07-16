@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Unit;
+use App\Models\Category;
 class Course extends Model
 {
 
@@ -24,6 +25,9 @@ class Course extends Model
      public function units()
     {
         return $this->hasMany(Unit::class);
+    }
+    public function category(){
+        return $this->belongsTo(Category::class);
     }
          
 }

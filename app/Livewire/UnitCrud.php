@@ -1,19 +1,23 @@
 <?php
-
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Unit;
+use App\Models\Course;
 
 class UnitCrud extends Component
 {
-    public $units = [];
+    use WithPagination;
 
+    public $courses = [];
     public $unitId;
-    public $course_id;
-    public $title;
-    public $position;
+    public $course_id = '';
+    public $title = '';
+    public $position = '';
+    public $filter_course_id = '';
+    public $applyFilter = false;
 
     public function mount()
     {
@@ -22,12 +26,23 @@ class UnitCrud extends Component
             abort(403);
         }
 
-        $this->loadUnits();
+        $this->loadCourses();
     }
 
-    public function loadUnits()
+    public function loadCourses()
     {
-        $this->units = Unit::orderBy('position')->get();
+        $this->courses = Course::select('id', 'title')->orderBy('title')->get();
+    }
+
+    public function updatedFilterCourseId()
+    {
+        // no auto filter
+    }
+
+    public function filterUnits()
+    {
+        $this->applyFilter = true;
+        $this->resetPage(); // reset pagination to page 1
     }
 
     public function saveUnit()
@@ -35,13 +50,15 @@ class UnitCrud extends Component
         $this->validate([
             'course_id' => 'required|integer',
             'title' => 'required|string|max:255',
-            'position' => 'required|integer',
         ]);
+
+        $lastPosition = Unit::where('course_id', $this->course_id)->max('position');
+        $position = $lastPosition ? $lastPosition + 1 : 1;
 
         $data = [
             'course_id' => $this->course_id,
             'title' => $this->title,
-            'position' => $this->position,
+            'position' => $position,
         ];
 
         if ($this->unitId) {
@@ -51,7 +68,7 @@ class UnitCrud extends Component
         }
 
         $this->resetForm();
-        $this->loadUnits();
+        $this->resetPage();
     }
 
     public function editUnit($id)
@@ -66,7 +83,7 @@ class UnitCrud extends Component
     public function deleteUnit($id)
     {
         Unit::findOrFail($id)->delete();
-        $this->loadUnits();
+        $this->resetPage();
     }
 
     public function resetForm()
@@ -79,7 +96,17 @@ class UnitCrud extends Component
 
     public function render()
     {
-        return view('livewire.unit-crud')
-        ->layout('layouts.app');
+        $query = Unit::with('course')->orderBy('position');
+
+        if ($this->applyFilter && $this->filter_course_id) {
+            $query->where('course_id', $this->filter_course_id);
+        }
+
+        $units = $query->paginate(10);
+
+        return view('livewire.unit-crud', [
+            'units' => $units,
+            'courses' => $this->courses,
+        ])->layout('layouts.app');
     }
 }

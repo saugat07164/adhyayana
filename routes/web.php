@@ -6,24 +6,29 @@ use App\Livewire\RoleCrud;
 use App\Livewire\AdminDashboard;
 use App\Livewire\ChapterCrud;
 use App\Livewire\UnitCrud;
+use App\Livewire\CourseCrud;
+use App\Livewire\CategoryCrud;
 Route::view('/', 'welcome');
-
+//Course Categories 
+Route::get('/course-categories', CategoryCrud::class)->name('courses.categories');
+Route::get('/course-categories/{category:slug}', CategoryCrud::class)->name('courses.categories.show');
 // Routes that require authentication and verification
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    Route::get('/dashboard', function () {
-        $role = auth()->user()->primary_role; // ✅ Using custom accessor from User model
+Route::get('/dashboard', function () {
+    $role = auth()->user()->primary_role;
 
-        return match ($role) {
-            'admin'      => redirect()->route('dashboard.admin'),
-            'staff'      => redirect()->route('dashboard.staff'),
-            'instructor' => redirect()->route('dashboard.instructor'),
-            'student'    => redirect()->route('dashboard.student'),
-            'support'    => redirect()->route('dashboard.support'),
-            'visitor'    => redirect()->route('dashboard.visitor'),
-            default      => view('dashboard.default'),
-        };
-    });
+    return match ($role) {
+        'admin'      => redirect()->route('dashboard.admin'),
+        'staff'      => redirect()->route('dashboard.staff'),
+        'instructor' => redirect()->route('dashboard.instructor'),
+        'student'    => redirect()->route('dashboard.student'),
+        'support'    => redirect()->route('dashboard.support'),
+        'visitor'    => redirect()->route('dashboard.visitor'),
+        default      => redirect()->route('dashboard.visitor'), // fallback
+    };
+})->name('dashboard');
+
 
     // Dashboard routes for specific roles
     Route::get('/dashboard/admin', AdminDashboard::class)
@@ -55,14 +60,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/admin/roles', RoleCrud::class)->name('admin.roles.index');
 
     // LMS Course Routes
-    Route::get('/courses', function () {
-        return view('courses.index');
-    })->name('courses.index');
+Route::get('/courses', CourseCrud::class)->name('courses.index');
+Route::get('/courses/{course}', CourseCrud::class)->name('courses.show');
 
-    Route::get('/courses/{course}', function ($course) {
-        return view('courses.show');
-    })->name('courses.show');
 
+
+
+//Chapters and Units Routes
 
 Route::get('/chapters', ChapterCrud::class)->name('chapter-crud');
 Route::get('/units', UnitCrud::class)->name('unit-crud');
