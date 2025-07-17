@@ -1,59 +1,65 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Courses') }}
-        </h2>
-    </x-slot>
+<x-slot name="header">
+    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        {{ __('Courses') }}
+    </h2>
+</x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <!-- Search and Filter Section -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
-                <div class="p-6">
-                    <div class="flex flex-col md:flex-row gap-4">
-                        <div class="flex-1">
-                            <input type="text" 
-                                   placeholder="Search courses..." 
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        </div>
-                        <div class="flex gap-2">
-                            <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                <option value="">All Categories</option>
-                                <option value="programming">Programming</option>
-                                <option value="design">Design</option>
-                                <option value="business">Business</option>
-                            </select>
-                            <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                <option value="">All Levels</option>
-                                <option value="beginner">Beginner</option>
-                                <option value="intermediate">Intermediate</option>
-                                <option value="advanced">Advanced</option>
-                            </select>
-                        </div>
+<div class="py-12">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
+            <div class="p-6">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="flex-1">
+                        <input type="text"
+                               wire:model.live="search"
+                               placeholder="Search courses..."
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div class="flex gap-2 items-center">
+                        <select wire:model.live="category_id"
+                                class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">All Categories</option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                        <select wire:model.live="level"
+                                class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">All Levels</option>
+                            <option value="beginner">Beginner</option>
+                            <option value="intermediate">Intermediate</option>
+                            <option value="advanced">Advanced</option>
+                        </select>
+                        <button type="button" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Filter</button>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Courses Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                @forelse($courses as $course)
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            @forelse($courses as $course)
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg hover:shadow-lg transition-shadow duration-300">
                     <div class="relative">
-                        <img src="{{ $course->thumbnail_url ?? 'https://via.placeholder.com/400x250/3B82F6/FFFFFF?text=Course' }}" 
-                             alt="Course thumbnail" 
+                        {{-- FIX: Use Storage::url() to get the public URL for the image --}}
+                        <img src="{{ $course->thumbnail_path ? Storage::url($course->thumbnail_path) : 'https://via.placeholder.com/400x250/3B82F6/FFFFFF?text=Course' }}"
+                             alt="Course thumbnail"
                              class="w-full h-48 object-cover">
                         <div class="absolute top-2 right-2">
                             <span class="bg-{{ $course->price > 0 ? 'red' : 'green' }}-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
-                                {{ $course->price > 0 ? '$' . number_format($course->price, 2) : 'Free' }}
+                                {{ $course->price > 0 ? 'Nrs.' . number_format($course->price, 2) : 'Free' }}
                             </span>
                         </div>
                     </div>
                     <div class="p-6">
                         <div class="flex items-center mb-2">
-                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">{{ $course->category->name ?? 'Uncategorized' }}</span>
+                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
+                                {{ $course->category->name ?? 'Uncategorized' }}
+                            </span>
                         </div>
                         <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $course->title }}</h3>
-                        <p class="text-gray-600 text-sm mb-4">{{ $course->description }}</p>
+                        <p class="text-gray-600 text-sm mb-4">
+                             {{ $this->getTrimmedDesc($course->description) }}
+                        </p>
                         <div class="flex items-center justify-between">
                             <div class="flex items-center text-sm text-gray-500">
                                 <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -72,8 +78,8 @@
                         <div class="mt-4 flex gap-2">
                             <a href="{{ route('courses.show', $course) }}" class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200 text-center">View</a>
                             @if(auth()->user() && auth()->user()->hasRole('admin'))
-                                <a href="{{ route('livewire.course-crud', ['edit' => $course->id]) }}" class="bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 transition-colors duration-200">Edit</a>
-                                <form action="{{ route('livewire.course-crud', ['delete' => $course->id]) }}" method="POST" onsubmit="return confirm('Delete this course?');" class="inline">
+                                <a href="{{ route('courses.crud', ['edit' => $course->id]) }}" class="bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 transition-colors duration-200">Edit</a>
+                                <form action="{{ route('courses.crud', ['delete' => $course->id]) }}" method="POST" onsubmit="return confirm('Delete this course?');" class="inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors duration-200">Delete</button>
@@ -82,39 +88,13 @@
                         </div>
                     </div>
                 </div>
-                @empty
+            @empty
                 <div class="col-span-4 text-center text-gray-500">No courses found.</div>
-                @endforelse
-            </div>
+            @endforelse
+        </div>
 
-            <!-- Pagination -->
-            <div class="mt-8 flex justify-center">
-                <nav class="flex items-center space-x-2">
-                    <a href="#" class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
-                        Previous
-                    </a>
-                    <a href="#" class="px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-blue-600 rounded-lg">
-                        1
-                    </a>
-                    <a href="#" class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
-                        2
-                    </a>
-                    <a href="#" class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
-                        3
-                    </a>
-                    <a href="#" class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
-                        Next
-                    </a>
-                </nav>
-            </div>
+        <div class="mt-8 flex justify-center">
+            {{ $courses->links() }}
         </div>
     </div>
-</x-app-layout> 
-
-{{--
-Template for CRUD Blade views for all tables:
-- index.blade.php: List all records
-- create.blade.php: Form to create a new record
-- edit.blade.php: Form to edit a record
-- show.blade.php: Show details of a record
---}} 
+</div>

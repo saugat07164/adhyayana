@@ -10,7 +10,8 @@ class Course extends Model
 
     protected $fillable = [
         'title', 
-        'description', 
+        'description',
+        'slug',
         'thumbnail_path', 
         'price', 
         'is_free', 

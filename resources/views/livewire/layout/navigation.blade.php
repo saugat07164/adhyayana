@@ -59,7 +59,9 @@ new class extends Component
                     >
                         {{ __('Dashboard') }}
                     </x-nav-link>
-
+<x-nav-link href="{{ route('courses.index') }}" :active="request()->is('our-courses')" wire:navigate>
+                        {{ __('Our Courses') }}
+                    </x-nav-link>
                     <x-nav-link href="/about" :active="request()->is('about')" wire:navigate>
                         {{ __('About') }}
                     </x-nav-link>

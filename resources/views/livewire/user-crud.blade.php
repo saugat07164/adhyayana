@@ -19,9 +19,16 @@
                 @forelse ($users as $user)
                     <div class="bg-gray-100 dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg shadow p-6 flex flex-col gap-2">
                         <div class="flex items-center gap-3 mb-2">
-                            <div class="h-12 w-12 rounded-full bg-slate-600 flex items-center justify-center text-white font-bold text-lg">
-                                {{ strtoupper(substr($user->name,0,1)) }}
-                            </div>
+                            @if ($user->profile_photo_path)
+    <img class="h-12 w-12 rounded-full object-cover" 
+         src="{{ Storage::url($user->profile_photo_path) }}" 
+         alt="{{ $user->name }}">
+@else
+    <div class="h-12 w-12 rounded-full bg-slate-600 flex items-center justify-center text-white font-bold text-lg">
+        {{ strtoupper(substr($user->name,0,1)) }}
+    </div>
+@endif
+
                             <div>
                                 <div class="font-semibold">{{ $user->name }}</div>
                                 <div class="text-xs text-gray-500 dark:text-gray-300">{{ $user->email }}</div>

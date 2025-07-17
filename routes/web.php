@@ -8,6 +8,7 @@ use App\Livewire\ChapterCrud;
 use App\Livewire\UnitCrud;
 use App\Livewire\CourseCrud;
 use App\Livewire\CategoryCrud;
+use App\Livewire\OurCourses;
 Route::view('/', 'welcome');
 //Course Categories 
 Route::get('/course-categories', CategoryCrud::class)->name('courses.categories');
@@ -60,9 +61,9 @@ Route::get('/dashboard', function () {
     Route::get('/admin/roles', RoleCrud::class)->name('admin.roles.index');
 
     // LMS Course Routes
-Route::get('/courses', CourseCrud::class)->name('courses.index');
+Route::get('/courses', CourseCrud::class)->name('courses.crud');
 Route::get('/courses/{course}', CourseCrud::class)->name('courses.show');
-
+Route::get('/our-courses', OurCourses::class)->name('courses.index');
 
 
 
