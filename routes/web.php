@@ -9,13 +9,14 @@ use App\Livewire\UnitCrud;
 use App\Livewire\CourseCrud;
 use App\Livewire\CategoryCrud;
 use App\Livewire\OurCourses;
+use App\Livewire\CourseStatus;
 Route::view('/', 'welcome');
 //Course Categories 
 Route::get('/course-categories', CategoryCrud::class)->name('courses.categories');
 Route::get('/course-categories/{category:slug}', CategoryCrud::class)->name('courses.categories.show');
 // Routes that require authentication and verification
 Route::middleware(['auth', 'verified'])->group(function () {
-
+Route::get('/course-status', CourseStatus::class)->name('courses.status');
 Route::get('/dashboard', function () {
     $role = auth()->user()->primary_role;
 

@@ -38,8 +38,9 @@ class CourseCrud extends Component
         'price'       => 'required|numeric|min:0',
         'category_id' => 'required|exists:categories,id',
         'slug'        => 'required|string|max:255',
-        'new_thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        'new_thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:9999',
     ];
+
 
     // Listen for when the slug field is updated directly by the user
     public function updatedSlug()
