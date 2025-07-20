@@ -62,15 +62,18 @@ new class extends Component
 <x-nav-link href="{{ route('courses.index') }}" :active="request()->is('our-courses')" wire:navigate>
                         {{ __('Our Courses') }}
                     </x-nav-link>
-                    <x-nav-link href="/about" :active="request()->is('about')" wire:navigate>
-                        {{ __('About') }}
-                    </x-nav-link>
-                    <x-nav-link href="{{ route('contactmessages.create') }}" :active="request()->is('contact')" wire:navigate>
-                        {{ __('Contact') }}
-                    </x-nav-link>
-                    <x-nav-link href="/terms" :active="request()->is('terms')" wire:navigate>
-                        {{ __('Terms & Conditions') }}
-                    </x-nav-link>
+             <x-nav-link href="{{ route('about') }}" :active="request()->routeIs('about')" wire:navigate>
+    {{ __('About') }}
+</x-nav-link>
+
+<x-nav-link href="{{ route('contactmessages.create') }}" :active="request()->routeIs('contactmessages.create')" wire:navigate>
+    {{ __('Contact') }}
+</x-nav-link>
+
+<x-nav-link href="{{ route('terms') }}" :active="request()->routeIs('terms')" wire:navigate>
+    {{ __('Terms & Conditions') }}
+</x-nav-link>
+
                 </div>
             </div>
 

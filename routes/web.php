@@ -18,6 +18,8 @@ use App\Livewire\Contact\ContactMessageIndex;
 use App\Livewire\Contact\ContactMessageCreate;
 use App\Livewire\Contact\ContactMessageShow;
 Route::view('/', 'welcome');
+Route::view('/about', 'about')->name('about');
+Route::view('/terms', 'terms')->name('terms');
 //Detail Views
 Route::get('/courses/{course}/units/{unit}', UnitDetail::class)->name('units.show');
 Route::get('/courses/{course}/units/{unit}/chapters/{chapter}', ChapterDetail::class)->name('chapters.show');
