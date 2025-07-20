@@ -65,7 +65,7 @@ new class extends Component
                     <x-nav-link href="/about" :active="request()->is('about')" wire:navigate>
                         {{ __('About') }}
                     </x-nav-link>
-                    <x-nav-link href="/contact" :active="request()->is('contact')" wire:navigate>
+                    <x-nav-link href="{{ route('contactmessages.create') }}" :active="request()->is('contact')" wire:navigate>
                         {{ __('Contact') }}
                     </x-nav-link>
                     <x-nav-link href="/terms" :active="request()->is('terms')" wire:navigate>

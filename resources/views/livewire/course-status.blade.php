@@ -12,6 +12,7 @@
                 <th class="px-4 py-2 border">SN</th>
                 <th class="px-4 py-2 border">Course ID</th>
                 <th class="px-4 py-2 border">Title</th>
+                <th class="px-4 py-2 border">Paid or Free</th>
                 <th class="px-4 py-2 border">Status</th>
                 <th class="px-4 py-2 border">Action</th>
             </tr>
@@ -23,6 +24,27 @@
                     <td class="px-4 py-2 border text-center">{{ $loop->iteration }}</td>
                     <td class="px-4 py-2 border text-center">{{ $course->id }}</td>
                     <td class="px-4 py-2 border">{{ $course->title }}</td>
+                   <td class="px-4 py-2 border text-center capitalize space-y-2">
+    <!-- Paid or Free Dropdown -->
+    <select
+        wire:model="coursePaidorFree.{{ $course->id }}"
+        class="border rounded px-8 py-1 text-sm focus:outline-none focus:ring focus:ring-blue-300"
+    >
+        <option value="1">Free</option>
+        <option value="0">Paid</option>
+    </select>
+
+    <button
+        wire:click="updatePaidorFree({{ $course->id }})"
+        class="ml-2 px-3 py-1 text-white bg-green-600 hover:bg-green-700 text-sm rounded"
+    >
+        Change
+    </button>
+
+</td>
+
+
+
 
                     <td class="px-4 py-2 border text-center capitalize">
                         <select

@@ -74,7 +74,7 @@
                                                         <i class="fas mr-2 text-xs" :class="unitOpen ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
                                                         {{ $unit->title }}
                                                     </span>
-                                                    <a href="#" class="text-sm text-indigo-600 hover:underline">View Unit</a>
+                                                   <a href="{{ route('units.show', ['course' => $course->id, 'unit' => $unit->id]) }}" class="text-sm text-indigo-600 hover:underline">View Unit</a>
                                                 </div>
 
                                                 <ul x-show="unitOpen"
@@ -84,7 +84,7 @@
                                                     @foreach ($unit->chapters as $chapter)
                                                         <li class="flex justify-between">
                                                             <span>{{ $chapter->title }}</span>
-                                                            <a href="#" class="text-xs text-green-600 hover:underline">View Chapter</a>
+                                                            <a href="{{ route('chapters.show', ['course' => $course->id, 'unit' => $unit->id, 'chapter' => $chapter->id]) }}" class="text-xs text-green-600 hover:underline">View Chapter</a>
                                                         </li>
                                                     @endforeach
                                                 </ul>

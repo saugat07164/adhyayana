@@ -34,48 +34,50 @@ class OurCourses extends Component
 
     // The main method where data is fetched and filtered for the view
     public function render()
-    {
-        // Start with a base query for Courses, eager-loading the category relationship
-        $query = Course::with('category');
+{
+    $categories = Category::all();
 
-        // Apply search filter if 'search' property is not empty
-        if ($this->search) {
-            $query->where(function ($q) {
-                $q->where('title', 'like', '%' . $this->search . '%')
-                  ->orWhere('description', 'like', '%' . $this->search . '%');
-            });
-        }
+    $baseQuery = Course::with('category')->where('status', 'published');
 
-        // Apply category filter if 'category_id' property is not empty
-        if ($this->category_id) {
-            $query->where('category_id', $this->category_id);
-        }
-
-        // Apply level filter if 'level' property is not empty
-        if ($this->level) {
-            $query->where('level', $this->level);
-        }
-
-        // Order the results (optional, but good practice)
-        $query->orderBy('created_at', 'desc');
-
-        // Get the paginated courses based on the applied filters
-        $courses = $query->paginate(12);
-
-        // Get all categories to populate the dropdown filter
-        $categories = Category::all();
-
-        // Return the view with the filtered courses and all categories
-        return view('courses.index', [
-            'courses' => $courses,
-            'categories' => $categories,
-            // You might also pass the current filter values back to the view
-            // so the dropdowns/inputs retain their selected state.
-            'currentSearch' => $this->search,
-            'currentCategoryId' => $this->category_id,
-            'currentLevel' => $this->level,
-        ])->layout('layouts.app'); // Assuming you have a layout named 'app'
+    // Search filter
+    if ($this->search) {
+        $baseQuery->where(function ($q) {
+            $q->where('title', 'like', '%' . $this->search . '%')
+              ->orWhere('description', 'like', '%' . $this->search . '%');
+        });
     }
+
+    // Category filter
+    if ($this->category_id) {
+        $baseQuery->where('category_id', $this->category_id);
+    }
+
+    // Level filter
+    if ($this->level) {
+        $baseQuery->where('level', $this->level);
+    }
+
+    // Get **only paid courses** here (exclude free courses)
+    $paidCoursesQuery = (clone $baseQuery)->where('is_free', false);
+
+    // Get **only free courses** here (include only free)
+    $freeCoursesQuery = (clone $baseQuery)->where('is_free', true);
+
+    // Paginate paid courses
+    $paid_courses = $paidCoursesQuery->orderBy('created_at', 'desc')->paginate(12);
+
+    // Get free courses (no pagination here, but you can paginate if you want)
+    $free_courses = $freeCoursesQuery->orderBy('created_at', 'desc')->get();
+
+    return view('courses.index', [
+        'courses' => $paid_courses,  // only paid courses here
+        'free_courses' => $free_courses,  // only free courses here
+        'categories' => $categories,
+        'currentSearch' => $this->search,
+        'currentCategoryId' => $this->category_id,
+        'currentLevel' => $this->level,
+    ])->layout('layouts.app');
+}
 
     // The `index` method is not needed in a Livewire component for rendering the main view.
     // It's typically used in a Laravel Controller.

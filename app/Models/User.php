@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\ContactMessage;
 
 class User extends Authenticatable
 {
@@ -59,5 +60,8 @@ public function hasRole($role)
 public function getPrimaryRoleAttribute()
 {
     return $this->roles->first()?->name ?? 'visitor';
+}
+public function contactmessages(){
+    return($this->hasMany(ContactMessage::class));
 }
 }

@@ -82,6 +82,19 @@
             </div>
         </div>
 
+ <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-8">
+            <div class="p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+                {{-- TODO: Replace with functional links or Livewire emits --}}
+                <div class="flex flex-wrap gap-4">
+                    <a href="{{ route('courses.crud') }}" class="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700">Add New Course</a>
+                    <a href="#" class="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700">Verify Payments</a>
+                    <a href="{{ route('admin.roles.index') }}" class="bg-yellow-500 text-white px-4 py-2 rounded shadow hover:bg-yellow-600">Manage Roles</a>
+                    <a href="{{ route('admin.users.index') }}"  class="bg-gray-800 text-white px-4 py-2 rounded shadow hover:bg-gray-900">Manage Users</a>
+                </div>
+            </div>
+        </div>
+        
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-8">
             <div class="p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Users</h3>
@@ -109,18 +122,7 @@
             </div>
         </div>
 
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-8">
-            <div class="p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
-                {{-- TODO: Replace with functional links or Livewire emits --}}
-                <div class="flex flex-wrap gap-4">
-                    <a href="#" class="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700">Add New Course</a>
-                    <a href="#" class="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700">Verify Payments</a>
-                    <a href="{{ route('admin.roles.index') }}" class="bg-yellow-500 text-white px-4 py-2 rounded shadow hover:bg-yellow-600">Manage Roles</a>
-                    <a href="{{ route('admin.users.index') }}"  class="bg-gray-800 text-white px-4 py-2 rounded shadow hover:bg-gray-900">Manage Users</a>
-                </div>
-            </div>
-        </div>
+       
 
     </div>
 </div>

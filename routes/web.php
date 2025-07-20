@@ -10,13 +10,28 @@ use App\Livewire\CourseCrud;
 use App\Livewire\CategoryCrud;
 use App\Livewire\OurCourses;
 use App\Livewire\CourseStatus;
+use App\Livewire\CourseDetail;
+use App\Livewire\UnitDetail;
+use App\Livewire\ChapterDetail;
+use App\Livewire\CourseInstructor;
+use App\Livewire\Contact\ContactMessageIndex;
+use App\Livewire\Contact\ContactMessageCreate;
+use App\Livewire\Contact\ContactMessageShow;
 Route::view('/', 'welcome');
+//Detail Views
+Route::get('/courses/{course}/units/{unit}', UnitDetail::class)->name('units.show');
+Route::get('/courses/{course}/units/{unit}/chapters/{chapter}', ChapterDetail::class)->name('chapters.show');
+Route::get('/contact-message/list', ContactMessageIndex::class)->name('contactmessages.index');
+Route::get('/contact-message/create', ContactMessageCreate::class)->name('contactmessages.create');
+Route::get('/contact-message/{contactmessage}/show', ContactMessageShow::class)->name('contactmessages.show');
+
 //Course Categories 
 Route::get('/course-categories', CategoryCrud::class)->name('courses.categories');
 Route::get('/course-categories/{category:slug}', CategoryCrud::class)->name('courses.categories.show');
 // Routes that require authentication and verification
 Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('/course-status', CourseStatus::class)->name('courses.status');
+Route::get('/course-instructor-assignment', CourseInstructor::class)->name('courses.instructor.assign');
 Route::get('/dashboard', function () {
     $role = auth()->user()->primary_role;
 
@@ -63,7 +78,7 @@ Route::get('/dashboard', function () {
 
     // LMS Course Routes
 Route::get('/courses', CourseCrud::class)->name('courses.crud');
-Route::get('/courses/{course}', CourseCrud::class)->name('courses.show');
+Route::get('/courses/{course}', CourseDetail::class)->name('courses.show');
 Route::get('/our-courses', OurCourses::class)->name('courses.index');
 
 

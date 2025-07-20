@@ -9,7 +9,7 @@
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-@livewireStyles
+        @livewireStyles
         <link href="/css/output.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
@@ -28,7 +28,7 @@
             </button>
 
             <div
-                class="fixed top-0 left-0 h-full w-64 bg-blue-900 bg-opacity-80 text-white shadow-xl z-50 rounded-r-lg backdrop-blur-sm overflow-y-auto"
+                class="fixed top-0 left-0 h-full w-72 bg-blue-900 bg-opacity-80 text-white shadow-xl z-50 rounded-r-lg backdrop-blur-sm overflow-y-auto"
                 x-show="sidebarOpen"
                 @click.away="sidebarOpen = false"
                 x-transition
@@ -87,6 +87,20 @@
                                     Profile
                                 </a>
                             </li>
+
+                            @auth
+    @if(auth()->user()->hasRole('admin'))
+        <li>
+            <a href="{{ route('contactmessages.index') }}"
+               class="flex items-center p-3 rounded-lg hover:bg-white hover:bg-opacity-20 transition-colors"
+               wire:navigate>
+               <i class="fa-solid fa-paper-plane mr-3"></i>
+               Contact Messages
+            </a>
+        </li>
+    @endif
+@endauth
+
                             
                             @php $user = auth()->user(); @endphp
                             @if($user)
@@ -101,17 +115,60 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                                         </svg>
                                     </button>
-                                    <ul x-show="open" class="ml-6 space-y-1">
-                                        <li><a href="{{ route('courses.crud') }}" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">Browse Courses</a></li>
-                                        <li><a href="{{ route('courses.categories') }}" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">Categories</a></li>
-                                        <li><a href="{{ route('courses.status') }}" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">Set Course Status</a></li>
-                                        @if($user->hasRole('instructor'))<li><a href="/livewire/course-crud?my=1" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">My Courses</a></li>@endif
-                                        @if($user->hasRole('admin') || $user->hasRole('staff'))
-                                        <li><a href="/livewire/certificate-crud" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">Certificates</a></li>
-                                        <li><a href="/livewire/badge-crud" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">Badges</a></li>
-                                        <li><a href="/livewire/coupon-crud" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">Coupons</a></li>
-                                        @endif
-                                    </ul>
+                                   <ul x-show="open" class="ml-6 space-y-1">
+  <li class="flex items-center justify-between">
+    <a href="{{ route('courses.crud') }}" class="p-2 rounded hover:bg-white hover:bg-opacity-10 flex-1">
+      Browse Courses
+    </a>
+  </li>
+  
+  <li class="flex items-center justify-between">
+    <a href="{{ route('courses.categories') }}" class="p-2 rounded hover:bg-white hover:bg-opacity-10 flex-1">
+      Categories
+    </a>
+  </li>
+  
+  @if($user->hasRole('instructor'))
+  <li class="flex items-center justify-between">
+    <a href="/livewire/course-crud?my=1" class="p-2 rounded hover:bg-white hover:bg-opacity-10 flex-1">
+      My Courses
+    </a>
+    <span class="ml-2 text-xs font-semibold text-yellow-300 bg-yellow-800 bg-opacity-20 px-2 py-0.5 rounded-full animate-pulse shadow-sm border border-yellow-400">
+      🚧 Soon
+    </span>
+  </li>
+  @endif
+  
+  @if($user->hasRole('admin') || $user->hasRole('staff'))
+  <li class="flex items-center justify-between">
+    <a href="/livewire/certificate-crud" class="p-2 rounded hover:bg-white hover:bg-opacity-10 flex-1">
+      Certificates
+    </a>
+    <span class="ml-2 text-xs font-semibold text-yellow-300 bg-yellow-800 bg-opacity-20 px-2 py-0.5 rounded-full animate-pulse shadow-sm border border-yellow-400">
+      🚧 Soon
+    </span>
+  </li>
+  
+  <li class="flex items-center justify-between">
+    <a href="/livewire/badge-crud" class="p-2 rounded hover:bg-white hover:bg-opacity-10 flex-1">
+      Badges
+    </a>
+    <span class="ml-2 text-xs font-semibold text-yellow-300 bg-yellow-800 bg-opacity-20 px-2 py-0.5 rounded-full animate-pulse shadow-sm border border-yellow-400">
+      🚧 Soon
+    </span>
+  </li>
+  
+  <li class="flex items-center justify-between">
+    <a href="/livewire/coupon-crud" class="p-2 rounded hover:bg-white hover:bg-opacity-10 flex-1">
+      Coupons
+    </a>
+    <span class="ml-2 text-xs font-semibold text-yellow-300 bg-yellow-800 bg-opacity-20 px-2 py-0.5 rounded-full animate-pulse shadow-sm border border-yellow-400">
+      🚧 Soon
+    </span>
+  </li>
+  @endif
+</ul>
+
                                 </li>
                                 @endif
                                 @if($user->hasRole('admin') || $user->hasRole('staff'))
@@ -128,6 +185,8 @@
                                     <ul x-show="open" class="ml-6 space-y-1">
                                         <li> <a href="{{ route('chapter-crud') }}" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">Chapters</a></li>
                                         <li><a href="{{ route('unit-crud') }}" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">Units</a></li>
+                                        <li><a href="{{ route('courses.status') }}" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">Set Course Status</a></li>
+                                        <li><a href="{{ route('courses.instructor.assign') }}" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">Set Course Instructor</a></li>
                                     </ul>
                                 </li>
                                 @endif
@@ -143,10 +202,32 @@
     </svg>
 </button>
                                     <ul x-show="open" class="ml-6 space-y-1">
-                                        <li><a href="/livewire/enrollment-crud" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">Enrollments</a></li>
-                                        <li><a href="/livewire/user-badge-crud" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">User Badges</a></li>
-                                        <li><a href="/dashboard/analytics" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">Progress Overview</a></li>
-                                    </ul>
+  <li class="flex items-center justify-between">
+    <a href="/livewire/enrollment-crud" class="p-2 rounded hover:bg-white hover:bg-opacity-10 flex-1">
+      Enrollments
+    </a>
+    <span class="ml-2 text-xs font-semibold text-yellow-300 bg-yellow-800 bg-opacity-20 px-2 py-0.5 rounded-full animate-pulse shadow-sm border border-yellow-400">
+      🚧 Soon
+    </span>
+  </li>
+  <li class="flex items-center justify-between">
+    <a href="/livewire/user-badge-crud" class="p-2 rounded hover:bg-white hover:bg-opacity-10 flex-1">
+      User Badges
+    </a>
+    <span class="ml-2 text-xs font-semibold text-yellow-300 bg-yellow-800 bg-opacity-20 px-2 py-0.5 rounded-full animate-pulse shadow-sm border border-yellow-400">
+      🚧 Soon
+    </span>
+  </li>
+  <li class="flex items-center justify-between">
+    <a href="/dashboard/analytics" class="p-2 rounded hover:bg-white hover:bg-opacity-10 flex-1">
+      Progress Overview
+    </a>
+    <span class="ml-2 text-xs font-semibold text-yellow-300 bg-yellow-800 bg-opacity-20 px-2 py-0.5 rounded-full animate-pulse shadow-sm border border-yellow-400">
+      🚧 Soon
+    </span>
+  </li>
+</ul>
+
                                 </li>
                                 @endif
                                 @if($user->hasRole('admin'))
@@ -163,7 +244,9 @@
                                     <ul x-show="open" class="ml-6 space-y-1">
                                         <li><a href="{{ route('admin.users.index') }}" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">Users</a></li>
                                         <li><a href="{{ route('admin.roles.index') }}" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">Roles</a></li>
-                                        <li><a href="/livewire/notification-crud" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">Notifications</a></li>
+                                        <li><a href="/livewire/notification-crud" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">Notifications</a><span class="ml-2 text-xs font-semibold text-yellow-300 bg-yellow-800 bg-opacity-20 px-2 py-0.5 rounded-full animate-pulse shadow-sm border border-yellow-400">
+      🚧 Soon
+    </span></li>
                                     </ul>
                             </li>
                                 @endif
@@ -179,8 +262,12 @@
                                     </svg>
                                     </button>
                                     <ul x-show="open" class="ml-6 space-y-1">
-                                        <li><a href="/my/enrollments" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">My Enrollments</a></li>
-                                        <li><a href="/my/progress" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">My Progress</a></li>
+                                        <li><a href="/my/enrollments" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">My Enrollments</a><span class="ml-2 text-xs font-semibold text-yellow-300 bg-yellow-800 bg-opacity-20 px-2 py-0.5 rounded-full animate-pulse shadow-sm border border-yellow-400">
+      🚧 Soon
+    </span></li>
+                                        <li><a href="/my/progress" class="block p-2 rounded hover:bg-white hover:bg-opacity-10">My Progress</a><span class="ml-2 text-xs font-semibold text-yellow-300 bg-yellow-800 bg-opacity-20 px-2 py-0.5 rounded-full animate-pulse shadow-sm border border-yellow-400">
+      🚧 Soon
+    </span></li>
                                     </ul>
                             </li>
                                 @endif

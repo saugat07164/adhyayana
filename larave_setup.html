@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laravel Project Setup Guide - Lesson</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7f6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        h1, h2, h3 {
+            font-family: 'Roboto', sans-serif;
+            color: #2c3e50;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+        h1 {
+            font-size: 2.5em;
+            text-align: center;
+            color: #2980b9;
+            margin-bottom: 1em;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        h2 {
+            font-size: 1.8em;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            margin-top: 2em;
+        }
+        h3 {
+            font-size: 1.4em;
+            color: #34495e;
+            margin-top: 1.5em;
+        }
+        code {
+            font-family: 'IBM Plex Mono', monospace;
+            background-color: #e8eaf6;
+            color: #c0392b;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.95em;
+            white-space: nowrap;
+        }
+        pre {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.9em;
+            line-height: 1.4;
+            margin-bottom: 1.5em;
+        }
+        pre code {
+            background-color: transparent;
+            color: #f8f8f2;
+            padding: 0;
+            border-radius: 0;
+            white-space: pre; /* Ensure line breaks are respected */
+        }
+        ul {
+            list-style: disc;
+            margin-left: 20px;
+            padding-left: 0;
+        }
+        ol {
+            list-style: decimal;
+            margin-left: 20px;
+            padding-left: 0;
+        }
+        li {
+            margin-bottom: 0.8em;
+        }
+        strong {
+            color: #2c3e50;
+        }
+        .note {
+            background-color: #ecf0f1;
+            border-left: 5px solid #3498db;
+            padding: 15px;
+            margin: 1.5em 0;
+            border-radius: 4px;
+        }
+        .note p {
+            margin: 0;
+        }
+        .important {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .indent {
+            margin-left: 20px;
+            padding-left: 10px;
+            border-left: 2px solid #ddd;
+        }
+        /* Print Styles */
+        @media print {
+            body {
+                background-color: #fff;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+            }
+            h1 {
+                page-break-after: avoid;
+            }
+            h2, h3 {
+                page-break-after: avoid;
+                page-break-inside: avoid;
+            }
+            pre {
+                page-break-inside: avoid;
+                overflow: visible; /* Allow code to wrap if necessary for print */
+                white-space: pre-wrap; /* For better print wrapping */
+                word-wrap: break-word; /* For better print wrapping */
+            }
+            ul, ol {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Laravel Project Setup Guide</h1>
+        <p>This guide will walk you through the essential steps to get your Laravel application up and running on a new computer after cloning it from a Git repository.</p>
+
+        <h2>1. Prerequisites</h2>
+        <p>Before you start, ensure you have the following tools installed on your new PC:</p>
+        <ul>
+            <li><strong>Git:</strong> For cloning the repository.</li>
+            <li><strong>PHP:</strong> Laravel requires a specific PHP version (check your project's <code>composer.json</code> for requirements).</li>
+            <li><strong>Composer:</strong> The dependency manager for PHP.</li>
+            <li><strong>Node.js & npm (or Yarn):</strong> If your project uses frontend assets (like Vue, React, Tailwind CSS) and Laravel Mix/Vite for compilation.</li>
+            <li><strong>Database Server:</strong> MySQL, PostgreSQL, SQLite, or whatever database your Laravel project uses. You'll need it installed and running (e.g., through XAMPP, WAMP, MAMP, Docker).</li>
+        </ul>
+
+        <h2>2. Core Setup Steps</h2>
+        <p>Navigate to your project directory in the terminal or command prompt:</p>
+        <pre><code>cd your-laravel-project-name</code></pre>
+
+        <h3>Step 2.1: Install PHP Dependencies (Composer)</h3>
+        <p>Laravel relies on Composer to manage its PHP packages. These packages are not typically committed to Git.</p>
+        <pre><code>composer install</code></pre>
+        <p>This command reads your <code>composer.json</code> file and downloads all necessary PHP packages into the <code>vendor/</code> directory.</p>
+
+        <h3>Step 2.2: Create your Environment File (<code>.env</code>)</h3>
+        <p>The <code>.env</code> file holds environment-specific configurations (database credentials, API keys, etc.) and is usually <code>.gitignore</code>d.</p>
+        <pre><code>cp .env.example .env</code></pre>
+        <p>This copies the example environment file, providing a template for your local settings.</p>
+
+        <h3>Step 2.3: Generate an Application Key</h3>
+        <p>The <code>APP_KEY</code> in your <code>.env</code> file is crucial for security (session encryption, CSRF protection). It needs to be unique for each application instance.</p>
+        <pre><code>php artisan key:generate</code></pre>
+        <p>This command generates a random key and automatically adds it to your new <code>.env</code> file.</p>
+
+        <h3>Step 2.4: Configure Database Connection in <code>.env</code></h3>
+        <p>Open the <code>.env</code> file in a text editor and update the database credentials to match your local setup.</p>
+        <pre><code class="language-dotenv">DB_CONNECTION=mysql # or pgsql, sqlite, etc.
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=your_database_name_here
+DB_USERNAME=your_database_username
+DB_PASSWORD=your_database_password</code></pre>
+        <div class="note">
+            <p><strong class="important">Important:</strong> You must <strong>manually create an empty database</strong> with the name specified in <code>DB_DATABASE</code> on your database server (e.g., using phpMyAdmin or MySQL Workbench). Laravel migrations will then populate this database.</p>
+        </div>
+
+        <h3>Step 2.5: Run Database Migrations</h3>
+        <p>This step builds your database schema by running the migration files located in your <code>database/migrations</code> directory.</p>
+        <pre><code>php artisan migrate</code></pre>
+        <p>If your project includes seeders (initial data population), you can run them after migrations:</p>
+        <pre><code>php artisan db:seed</code></pre>
+        <p>To refresh your database (drop all tables and re-run migrations) and then seed:</p>
+        <pre><code>php artisan migrate:fresh --seed</code></pre>
+        <div class="note">
+            <p><strong class="important">Caution:</strong> <code>migrate:fresh</code> will delete all existing data in your database. Only use it for fresh development environments.</p>
+        </div>
+
+        <h2>3. Frontend Setup (If Applicable)</h2>
+
+        <h3>Step 3.1: Install Frontend Dependencies</h3>
+        <p>If your Laravel project uses npm/Yarn for frontend assets (check for a <code>package.json</code> file in your project root), install those dependencies:</p>
+        <pre><code>npm install
+# OR
+yarn install</code></pre>
+
+        <h3>Step 3.2: Compile Frontend Assets</h3>
+        <p>After installing dependencies, compile your assets using Laravel Mix or Vite.</p>
+        <h4>For Laravel Mix:</h4>
+        <pre><code>npm run dev   # for development build
+# OR
+npm run watch # watches for changes and recompiles automatically
+# OR
+npm run prod  # for production build (minified, optimized)</code></pre>
+        <h4>For Vite (Laravel 9+):</h4>
+        <pre><code>npm run dev    # for development build
+# OR
+npm run build  # for production build</code></pre>
+
+        <h2>4. Post-Setup & Running the App</h2>
+
+        <h3>Step 4.1: Link Storage (If Applicable)</h3>
+        <p>If your application stores user-uploaded files or other publicly accessible files, create a symbolic link:</p>
+        <pre><code>php artisan storage:link</code></pre>
+
+        <h3>Step 4.2: Clear Caches (Good Practice)</h3>
+        <p>Clear Laravel's caches to ensure all changes are reflected and avoid issues.</p>
+        <pre><code>php artisan cache:clear
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear</code></pre>
+
+        <h3>Step 4.3: Start the Development Server</h3>
+        <p>Finally, serve your Laravel application locally.</p>
+        <pre><code>php artisan serve</code></pre>
+        <p>This usually starts a development server at <code>http://localhost:8000</code>. You can then open this URL in your web browser.</p>
+        <div class="note">
+            <p>If you're using a web server like Apache or Nginx, you'll need to configure a virtual host to point to your project's <code>public</code> directory instead of using <code>php artisan serve</code>.</p>
+        </div>
+
+        <h2>Summary Checklist</h2>
+        <p>Here's a quick checklist for reference:</p>
+        <ol>
+            <li><code>cd your-laravel-project-name</code></li>
+            <li><code>composer install</code></li>
+            <li><code>cp .env.example .env</code></li>
+            <li>Open <code>.env</code> and configure <code>DB_DATABASE</code>, <code>DB_USERNAME</code>, <code>DB_PASSWORD</code>.</li>
+            <li><strong>Manually create the database</strong> (e.g., in phpMyAdmin).</li>
+            <li><code>php artisan key:generate</code></li>
+            <li><code>php artisan migrate</code> (and optionally <code>php artisan db:seed</code>)</li>
+            <li><code>npm install</code> (if <code>package.json</code> exists)</li>
+            <li><code>npm run dev</code> (if <code>package.json</code> exists)</li>
+            <li><code>php artisan storage:link</code> (if public storage is used)</li>
+            <li><code>php artisan serve</code></li>
+        </ol>
+
+        <p>You're all set! Your Laravel application should now be running.</p>
+    </div>
+</body>
+</html>
